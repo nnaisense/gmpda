@@ -1,0 +1,30 @@
+
+experiment:
+  name: "test_real_ts"
+  data_path: "./data/some_real_ts.csv"  # requires a one dim series
+  results_path: "logs"  # default is ./logs
+  results_format: "pkl"
+  # reference loss
+  ref_loss: False
+  ref_loss_samples: 10
+
+
+# GMPDA Algorithm Parameters
+gmpda:
+  random_walk: 1  # 1 - Random Walk Model, 0 - Clock Model
+  seed: 3  # random seed
+  # gaussian pdf settings
+  sigma_curvefit: True  # If True sigma is fitted to the pre-process, if False, sigma below is taken
+  sigma: [3]  # must be a list
+  sigma_log_init: True  # init sigma = log(mu)
+  # min/max
+  mu_range_min: 5  # min periodicity to consider, high-pass filter
+  mu_range_max: 500  # max periodicity allowed, low pass filter
+  # hierarchical settings
+  max_periods: 3  # maximal number of multiple/overlapping periodicities
+  max_depth: 5  # max number of hierarchical runs
+  max_candidates: 15  # count of candidate periodicities to check for hierarchical iteration of the algorithm
+  # dealing with noise
+  loss_length: 400  # e.g. 2*mu_range_max is the range we want to use to compute the loss.
+  noise_range: 5  # all periodicities from 0 to noise_range are due to noise/interaction intervals
+  loss_change_tol: 0.001

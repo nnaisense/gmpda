@@ -1,0 +1,115 @@
+---
+title: "GMPDA_R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+How to call GMPDA in R
+
+
+```{r cars}
+library(reticulate)
+
+use_virtualenv("gmpda")
+py_config()
+py_install('matplotlib', pip = TRUE)
+py_install('scipy', pip = TRUE)
+py_install('pandas', pip = TRUE)
+
+py_install('git+ssh://git@codebase.nnaisense.com/olga/gmpda.git', pip = TRUE)
+```
+
+## Call GMPDA
+
+call gmpda for an example
+
+```{python}
+import numpy as np
+import gmpda.DataGenTestCases as DataGenTestCases
+import gmpda.Gmpda as Gmpda
+
+import random
+import matplotlib.pyplot as plt
+
+np.random.seed(3)
+random.seed(3)
+```
+Generate a test case for clock_model / random walk model
+
+```{python}
+true_periodicity = [167, 101]
+sigma_true = [2, 3]
+nr_event = 500
+dg = DataGenTestCases.DataGenerator(nrevents=nr_event, periods=true_periodicity, sigmas=sigma_true, fp_beta=0)
+
+ts_rw, _ = dg.gen_rw_model();
+
+mu_range_max = 350
+mu_range_min = 10
+loss_length = 2 * 350
+
+
+gmpda = Gmpda.Gmpda(
+    ts_rw,
+    gmpda_seed=3,
+    random_walk=1,
+    sigma=2,
+    sigma_curvefit=True,
+    sigma_log_init=True,
+    mu_range_min=mu_range_min,
+    mu_range_max=mu_range_max,
+    noise_range=mu_range_min,
+    max_depth=5,
+    max_candidates=15,
+    max_periods=3,
+    loss_length=loss_length,
+    loss_change_tol=0.01,
+)
+
+
+print("True parameters: mu {}, sigma {}".format(true_periodicity, sigma_true))
+mu_best, sigma, loss, D_tau, dmu_init, tau_mu, gmu_best, ref_loss = gmpda.extract_periods();
+gmpda.plot_results(gmu_best, tau_mu, mu_best, sigma, plot_dmu=False);
+
+```
+
+
+
+Apply GMPDA to some real data
+
+```{python}
+import pandas as pd
+
+
+
+fn_path = 'examples/real_application/data/some_real_ts.csv'
+df = pd.read_csv(fn_path)
+ts = df.values
+
+gmpda = Gmpda.Gmpda(ts,
+                    random_walk=1,
+                    gmpda_seed=3,
+
+                    sigma=3,
+                    sigma_curvefit=True,
+                    sigma_log_init=True,
+
+                    mu_range_min=5,
+                    mu_range_max=500,
+
+                    max_depth=5,
+                    max_candidates=15,
+                    max_periods=5,
+
+                    loss_length=400,
+                    noise_range=5,
+                    loss_change_tol=0.001
+                   )
+
+mu_best, sigma, loss, D_tau, dmu_init, tau_mu, gmu_best, ref_loss = gmpda.extract_periods()
+gmpda.plot_results(gmu_best, tau_mu, mu_best, sigma, plot_dmu=False);
+```
