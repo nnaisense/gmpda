@@ -86,6 +86,7 @@ Important GMPDA model parameters:
 - **max_depth** *(int)* - Determines the maximal number of hierarchical steps in the fast algorithm.
 - **loss_length** *(int)* - Defines the range over which the loss function will be computed. The minimum is *mu_range_max*, the maximum is the length of the time series. Please note, for very noisy, or short time series *loss_length* should be set relatively low, e.g., *2mu_range_max*.
 - **loss_change_tol** *(float)* - Minimal magnitude of the loss decrease a value in `[0,1)`.
+- **ref_loss_n** *(int)* - If *ref_loss_n*>0 then the loss is computed for *n* random time series of the same length as the input and returned as the averaged loss, i.e., the reference loss.
 - **noise_range** *(int)* - Is used to approximate the noise.
 
 
@@ -119,10 +120,11 @@ The output should be:
 True parameters: mu [167, 101], sigma [2, 3]
 ==================================================
 GMPDA STARTS
+Reference Loss: min=1.021058252479727, 0.01 quantile=1.0301487506017142, 0.05 quantile=1.0665107430896632
 Sigma optimized via Trust Region Reflective Algo.
 Sigma update does not improve loss.
 GMPDA FINISHED
-Best obtained mu [101, 167], loss [0.22895101], sigma [3.0, 2.0]
+Best obtained mu [np.int64(101), np.int64(167)], loss [0.22895101], sigma [np.float64(3.0), np.float64(2.0)]
 ==================================================
 ```
 
@@ -148,11 +150,14 @@ The loaded event time series has shape (1, 13199)
 Event time series has in total 392 events
 Require loss_length > mu_range_max. Set loss_length = mu_range_max + 3*max(self.sigma)
 ==================================================
+Estimating reference loss
+Reference loss is 1.0222583806514751 
+==================================================
 GMPDA STARTS
 Sigma optimized via Trust Region Reflective Algo.
 Sigma update does not improve loss.
 GMPDA FINISHED
-Best obtained mu [19, 75], loss [0.20541469], sigma [5.0, 19.0]
+Best obtained mu [np.int64(19), np.int64(75)], loss [0.20541469], sigma [np.float64(5.0), np.float64(19.0)]
 ==================================================
 Final results are stored in logs/test_real_ts_20220103_113055/results_dic.pkl
 ```

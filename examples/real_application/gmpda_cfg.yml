@@ -5,7 +5,7 @@ experiment:
   results_path: "logs"  # default is ./logs
   results_format: "pkl"
   # reference loss
-  ref_loss: False
+  ref_loss: True
   ref_loss_samples: 10
 
 

@@ -30,7 +30,7 @@ class FitClass:
             mu = self.mu[i]
             sigma = args[1 + (idx_offset * i)]
             a = args[2 + (idx_offset * i)]
-            gauss_sum += a * np.exp(-((x - mu) ** 2.0) / 2.0 / sigma ** 2.0)
+            gauss_sum += a * np.exp(-((x - mu) ** 2.0) / 2.0 / sigma**2.0)
         return gauss_sum
 
 
@@ -151,7 +151,7 @@ class GMPDA:
         :param decimals:
         :return: rounded float up to decimals
         """
-        multiplier = 10 ** decimals
+        multiplier = 10**decimals
         if isinstance(n, np.ndarray):
             return (n * multiplier).astype("int") / multiplier
         elif isinstance(n, float):
@@ -205,7 +205,7 @@ class GMPDA:
             ts_noise[:, idx_events] = 1
             self.sigma = sigma_orig
 
-             _, _, loss_, _, _, _, _, _ = self.extract_periods(ts=ts_noise, verbose=False)
+            _, _, loss_, _, _, _, _, _ = self.extract_periods(ts=ts_noise, verbose=False)
             ref_loss.append(loss_[0])
 
         # Set self to origin ts
@@ -352,11 +352,11 @@ class GMPDA:
 
         # Estimate gmu
         sigma_x = np.sqrt(self.random_walk * (x_range - 1) + 1) * sigma
-        sigma_x2 = sigma_x ** 2
+        sigma_x2 = sigma_x**2
         a_x = 1 / np.sqrt(2 * np.pi * sigma_x2)
         for i in range(len(mu_x)):
             conf_ = np.ceil(3 * sigma_x[i])  # multiplication with 3 ensures covering of 99% of the gauss pdf.
-            x = np.arange(int(max(1, mu_x[i] - conf_)), int(mu_x[i] + conf_ + 1), 1, dtype=np.int)
+            x = np.arange(int(max(1, mu_x[i] - conf_)), int(mu_x[i] + conf_ + 1), 1, dtype=int)
             x = x[np.where(x < self.loss_length)]
             gmu[:, x] += (a_x[i] * np.exp((-0.5 * (x - mu_x[i]) ** 2) / sigma_x2[i])) * b_x[i]
 
@@ -604,7 +604,7 @@ class GMPDA:
         ###################################################################
         # 0. Calculate reference loss if requested.
         ###################################################################
-        ref_loss = np.NaN
+        ref_loss = np.nan
         if self.ref_loss_n > 0:
             ref_loss = self.get_ref_loss(self.ref_loss_n)
             printv(
