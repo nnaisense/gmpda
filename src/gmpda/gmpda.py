@@ -205,7 +205,7 @@ class GMPDA:
             ts_noise[:, idx_events] = 1
             self.sigma = sigma_orig
 
-            _, _, _, loss_, _ = self.extract_periods(ts=ts_noise, verbose=False)
+             _, _, loss_, _, _, _, _, _ = self.extract_periods(ts=ts_noise, verbose=False)
             ref_loss.append(loss_[0])
 
         # Set self to origin ts
